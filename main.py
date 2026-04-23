@@ -2,7 +2,8 @@ import numpy as np
 import csv
 from pathlib import Path
 
-from utils import get_synthetic_data, get_real_data, prepare_data
+from datasets import get_real_data, get_synthetic_data
+from utils import prepare_data
 from models import RidgeRegression
 
 RESULTS_DIR = Path("results")
@@ -53,10 +54,13 @@ def run_and_save_results(X_train, y_train, X_test, y_test, lambdas, filename, ve
     if verbose : print(f"--- Risultati salvati in: {filepath} ---\n")
 
 if __name__ == "__main__":
-    lambdas = np.logspace(-3, 3, 30)
+    lambdas = np.logspace(-3, 5, 30)
+
+    # Inserito lo 0.0 all'inizio (Unregularized Least Squares)
+    lambdas = np.insert(lambdas, 0, 0.0)
 
     # EXP 1: Dataset Sintetico
-    X_s, y_s = get_synthetic_data(n_samples=150, n_features=15, noise=25.0)
+    X_s, y_s = get_synthetic_data(n_samples=60, n_features=50, noise=20.0)
     Xs_train, Xs_test, ys_train, ys_test = prepare_data(X_s, y_s)
     run_and_save_results(Xs_train, ys_train, Xs_test, ys_test, lambdas, "results_synthetic.csv")
 
